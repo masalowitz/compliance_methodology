@@ -91,3 +91,16 @@ Status:
 Events:               <none>
 ```
 
+Pause affected MCP's
+```
+oc patch mcp/{master|worker|other} --patch '{"spec":{"paused":true}}' --type=merge
+```
+
+Apply remediatons
+
+``
+oc patch complianceremediations/{rule} --patch '{"spec":{"apply":true}}' --type=merge
+``
+
+
+
