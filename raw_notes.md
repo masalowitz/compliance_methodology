@@ -26,7 +26,7 @@ Confirm Status of remediation:
 ```
 oc get complianceremediation rhcos4-moderate-master-kernel-module-bluetooth-disabled
 ```
-Output:
+Example Output:
 ```
 NAME                                                      STATE
 rhcos4-moderate-master-kernel-module-bluetooth-disabled   NotApplied
@@ -36,7 +36,7 @@ Inspect remediation:
 ```
 oc describe complianceremediation rhcos4-moderate-master-kernel-module-bluetooth-disabled
 ```
-Output:
+Example Output:
 ```
 Name:         rhcos4-moderate-master-kernel-module-bluetooth-disabled
 Namespace:    openshift-compliance
