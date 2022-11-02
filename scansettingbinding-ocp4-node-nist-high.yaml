@@ -1,7 +1,7 @@
 apiVersion: compliance.openshift.io/v1alpha1
 kind: ScanSettingBinding
 metadata:
-  name: ocp-node-nist-high
+  name: ocp4-node-nist-high
   namespace: openshift-compliance
 profiles:
 - apiGroup: compliance.openshift.io/v1alpha1
