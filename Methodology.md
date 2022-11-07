@@ -22,7 +22,7 @@ In general, most organizations have at least a few changes to "off-the-shelf" po
 
 ### Identify items which FAIL analysis
 
-### Identify failing scans with automated remediation
+### Identify failing scans with remediation content
 
 ### Review and confirm remediations
 
@@ -32,9 +32,15 @@ In general, most organizations have at least a few changes to "off-the-shelf" po
 
 ### Rescan environment to confirm sucessful remediation
 
-### Lather, rinse, repeat until automated remediations applied
+### Lather, rinse, repeat until available remediations applied
 
-## View, Track, and Export Compliance
+### Automating applying remediation - pros, cons, and recommendations
+
+### Manual Remeditions
+
+
+
+## Next Steps: Using ACS to view and export compliance
 
 
 
