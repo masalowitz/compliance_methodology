@@ -14,7 +14,17 @@ In general, most organizations have at least a few changes to "off-the-shelf" po
 
 ### Install Compliance Operator
 
+You can install the Compliance Operator from both web and CLI instances, choose whatever method works best for you and your environment. 
+
+https://docs.openshift.com/container-platform/4.11/security/compliance_operator/compliance-operator-installation.html
+
+If you have a small number of clusters, the Operator Catalog method may suffice. If you are managing a large number of clusters, applying the namespace manifests via ACM, GitOps, or other tooling is the best solution. 
+
+Regardless of the install method, it is important to keep the operator up to date to receive content updates and bug fixes. The content update will include new policies, rules, checks, and remediations as released in the upstream Compliance projects. If automated updates are not available due to a disconnected environment, a regular practice should include checking for updated releases and importing them to your internal registory for use. 
+
 ### Accept or alter scan schedule in ScanSettings
+
+Compliance Operator comes with two default ScanSetting configurations, "default" and "default-auto-apply". Both ScanSetting files contain a default execution time in standard cron format of 01:00hrs daily system time. If necessary, adjust these for acceptable time period where system workloads may be least impacted.  
 
 ### Create ScanSettingBindings for enterprise-appropriate scans
 
