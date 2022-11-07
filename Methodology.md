@@ -12,4 +12,29 @@ In general, most organizations have at least a few changes to "off-the-shelf" po
 
 ## Specific Workflow for Openshift
 
+### Install Compliance Operator
+
+### Accept or alter scan schedule in ScanSettings
+
+### Create ScanSettingBindings for enterprise-appropriate scans
+
+### Confirm Execution of scans
+
+### Identify items which FAIL analysis
+
+### Identify failing scans with automated remediation
+
+### Review and confirm remediations
+
+### Optionally apply tailoring to check & remediation content
+
+### Manually apply remediation
+
+### Rescan environment to confirm sucessful remediation
+
+### Lather, rinse, repeat until automated remediations applied
+
+## View, Track, and Export Compliance
+
+
 
