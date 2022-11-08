@@ -34,7 +34,7 @@ Neither of these are "active" until they have been bound to by a ScanSettingBind
 
 ### Create ScanSettingBindings for enterprise-appropriate scans
 
-@@scansettingbinding-ocp4-high-node.yaml(manifests/scansettingbinding-ocp4-high-node.yaml)
+
 
 
 ### Confirm Execution of scans
