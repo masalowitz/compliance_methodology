@@ -24,11 +24,18 @@ Official Docs: [Compliance Operator Installation](https://docs.openshift.com/con
 
 ### Accept or alter scan schedule in ScanSettings
 
+ScanSettings can be though of as the "how" and the "when" to scan. They contain details that tell Compliance Operator on what node types to run, when to run them, how much storage and of what type to use to retain scans, and how long to retain the results. What it does NOT do is define thecontent or profiles to scan.. that is the province of the ScanSettingBinding.
+
 Compliance Operator comes with two default ScanSetting configurations, "default" and "default-auto-apply". Both ScanSetting files contain a default execution time in standard cron format of 01:00hrs daily system time. If necessary, adjust these for acceptable time period where system workloads may be least impacted.
 
 Default is a scan-only setting. 
 
 Default-auto-apply is a non-interative scheduled remediation of rules.
+
+Additional options can be configured in the ScanSettings including scan retention depth, storage types and amounts, taint tolerations, etc. The default files have been included [here for reference](/manifests/ScanSetting/) 
+
+
+Official Docs: [Compliance Operator Scans](https://docs.openshift.com/container-platform/4.11/security/compliance_operator/compliance-scans.html#running-compliance-scans_compliance-operator-scans)
 
 Neither of these are "active" until they have been bound to by a ScanSettingBinding.
 
