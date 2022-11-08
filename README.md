@@ -1,6 +1,6 @@
 # Compliance Operator
 
-TL;DR: tools to manage/assess compliance.
+TL;DR: tips and tricks to manage/assess compliance.
 
 Long version:
 
