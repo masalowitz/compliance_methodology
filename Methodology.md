@@ -32,7 +32,7 @@ Compliance Operator comes with two default ScanSetting configurations, "default"
 
 ### Optional but highly recommended: Install ACS 
 
-Ref: [Using ACS to View and Export Compliance]/compliance_operator/blob/main/Methodology.md#next-steps-using-acs-to-view-and-export-compliance
+Ref: [Using ACS to View and Export Compliance](/compliance_operator/blob/main/Methodology.md#next-steps-using-acs-to-view-and-export-compliance)
 
 ### Identify items which FAIL analysis
 
