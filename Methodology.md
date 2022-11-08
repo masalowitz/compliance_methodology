@@ -30,6 +30,10 @@ Compliance Operator comes with two default ScanSetting configurations, "default"
 
 ### Confirm Execution of scans
 
+### Optional but highly recommended: Install ACS 
+
+Ref: /compliance_operator/blob/main/Methodology.md#next-steps-using-acs-to-view-and-export-compliance
+
 ### Identify items which FAIL analysis
 
 ### Identify failing scans with remediation content
