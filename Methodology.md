@@ -76,10 +76,7 @@ autoApplyRemediations: true
 autoUpdateRemediations: true
 ```
 
-
-
 Additional options can be configured in the ScanSettings including scan retention depth, storage types and amounts, taint tolerations, etc. The default files have been included [here for reference](/manifests/ScanSetting/) 
-
 
 Official Docs: [Compliance Operator Scans](https://docs.openshift.com/container-platform/4.11/security/compliance_operator/compliance-scans.html#running-compliance-scans_compliance-operator-scans)
 
@@ -87,10 +84,42 @@ Neither of these are "active" until they have been bound to by a ScanSettingBind
 
 ### Create ScanSettingBindings for enterprise-appropriate scans
 
+ScanSettingBinding is what links a compliance profile to the execution environment specified in the ScanSettings.
 
+```
+apiVersion: compliance.openshift.io/v1alpha1
+kind: ScanSettingBinding
+metadata:
+  name: rhcos4-nist-high
+  namespace: openshift-compliance
+profiles:
+- apiGroup: compliance.openshift.io/v1alpha1
+  kind: Profile
+  name: rhcos4-high
+settingsRef:
+  apiGroup: compliance.openshift.io/v1alpha1
+  kind: ScanSetting
+  name: default
+  ```
 
+Creation of a ScanSettingBinding triggers an immediate scan of the system. Once created, there are two ways to trigger a scan/rescan of the system: change the cron entry or execute a [rescan](/Methodology.md#rescan-environment-to-confirm-sucessful-remediation)
 
 ### Confirm Execution of scans
+
+There are a couple of ways to determine the status of a scan. If it says DONE here, no need to look farther:
+
+```
+[foo@bar]$ oc -n openshift-compliance get compliancescans
+NAME                    PHASE   RESULT
+ocp4-high               DONE    NON-COMPLIANT
+ocp4-high-node-master   DONE    NON-COMPLIANT
+ocp4-high-node-worker   DONE    NON-COMPLIANT
+rhcos4-high-master      DONE    NON-COMPLIANT
+rhcos4-high-worker      DONE    NON-COMPLIANT
+[foo@bar]$ 
+```
+
+
 
 ### Optional but highly recommended: Install ACS 
 
@@ -100,7 +129,65 @@ There are a couple of ways to extract compliance data, but ACS is by far the eas
 
 ### Identify items which FAIL analysis
 
+A great place to start is just to get an idea of whats failing and what is passing on your cluster. "oc get compliancecheckresults" is the way to do this, but it gives you all profiles scanned, and all pass/fail/manual results. I like to get a quick look at some stats...overall, maybe per profile, and counts of pass/fail. 
+```
+[foo@bar]$ oc get compliancecheckresults | grep ocp4-high-node | grep FAIL
+ocp4-high-node-master-directory-access-var-log-kube-audit                                       FAIL     medium
+ocp4-high-node-master-directory-access-var-log-oauth-audit                                      FAIL     medium
+ocp4-high-node-master-directory-access-var-log-ocp-audit                                        FAIL     medium
+ocp4-high-node-master-file-permissions-etcd-data-dir                                            FAIL     medium
+ocp4-high-node-master-kubelet-enable-protect-kernel-defaults                                    FAIL     medium
+ocp4-high-node-master-kubelet-enable-protect-kernel-sysctl                                      FAIL     medium
+ocp4-high-node-master-reject-unsigned-images-by-default                                         FAIL     medium
+ocp4-high-node-worker-directory-access-var-log-kube-audit                                       FAIL     medium
+ocp4-high-node-worker-directory-access-var-log-oauth-audit                                      FAIL     medium
+ocp4-high-node-worker-directory-access-var-log-ocp-audit                                        FAIL     medium
+ocp4-high-node-worker-file-permissions-etcd-data-dir                                            FAIL     medium
+ocp4-high-node-worker-kubelet-enable-protect-kernel-defaults                                    FAIL     medium
+ocp4-high-node-worker-kubelet-enable-protect-kernel-sysctl                                      FAIL     medium
+ocp4-high-node-worker-reject-unsigned-images-by-default                                         FAIL     medium
+
+[foo@bar]$ oc get compliancecheckresults | grep ocp4-high-node | grep -c FAIL
+14
+
+[foo@bar]$ oc get compliancecheckresults | grep ocp4-high-node | grep -c PASS
+166
+
+[foo@bar]$ oc get compliancecheckresults | grep ocp4-high-node | grep -c MANUAL
+6
+
+```
+
+So for this particular standard, we're in pretty decent shape. We know we have some manual work to do, we can get to that later. For now, however, lets see what of these failures we can remediate with automation using filters...
+
+
+
 ### Identify failing scans with remediation content
+
+
+```
+oc get compliancecheckresults -l 'compliance.openshift.io/check-status=FAIL,compliance.openshift.io/automated-remediation'
+```
+
+So for my environment, 10 of the rules liste above have automated remediation:
+```
+[foo@bar]$ oc get compliancecheckresults -l 'compliance.openshift.io/check-status=FAIL,compliance.openshift.io/automated-remediation' | grep -c ocp4-high-node
+10
+
+[foo@bar]$ oc get compliancecheckresults -l 'compliance.openshift.io/check-status=FAIL,compliance.openshift.io/automated-remediation' | grep ocp4-high-node
+ocp4-high-node-master-directory-access-var-log-kube-audit                                       FAIL     medium
+ocp4-high-node-master-directory-access-var-log-oauth-audit                                      FAIL     medium
+ocp4-high-node-master-directory-access-var-log-ocp-audit                                        FAIL     medium
+ocp4-high-node-master-kubelet-enable-protect-kernel-defaults                                    FAIL     medium
+ocp4-high-node-master-kubelet-enable-protect-kernel-sysctl                                      FAIL     medium
+ocp4-high-node-worker-directory-access-var-log-kube-audit                                       FAIL     medium
+ocp4-high-node-worker-directory-access-var-log-oauth-audit                                      FAIL     medium
+ocp4-high-node-worker-directory-access-var-log-ocp-audit                                        FAIL     medium
+ocp4-high-node-worker-kubelet-enable-protect-kernel-defaults                                    FAIL     medium
+ocp4-high-node-worker-kubelet-enable-protect-kernel-sysctl                                      FAIL     medium
+[foo@bar]$ 
+
+```
 
 ### Review and confirm remediations
 
