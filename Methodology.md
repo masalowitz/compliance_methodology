@@ -191,6 +191,140 @@ ocp4-high-node-worker-kubelet-enable-protect-kernel-sysctl                      
 
 ### Review and confirm remediations
 
+So before we apply a remediationf or the firts tiem, we should have a look at what it is, what criteria it uses to determine compliance, and is the embedded remedaition something apprtopriate for our server? Let look at one...
+```
+oc describe complianceremediation ocp4-high-node-master-kubelet-enable-protect-kernel-defaults
+```
+
+```
+[msalowit@fedora compliance_operator]$ oc describe complianceremediation ocp4-high-node-master-kubelet-enable-protect-kernel-defaults
+Name:         ocp4-high-node-master-kubelet-enable-protect-kernel-defaults
+Namespace:    openshift-compliance
+Labels:       compliance.openshift.io/has-unmet-dependencies=
+              compliance.openshift.io/scan-name=ocp4-high-node-master
+              compliance.openshift.io/suite=ocp4-high-node
+Annotations:  compliance.openshift.io/depends-on: xccdf_org.ssgproject.content_rule_kubelet_enable_protect_kernel_sysctl
+API Version:  compliance.openshift.io/v1alpha1
+Kind:         ComplianceRemediation
+Metadata:
+  Creation Timestamp:  2022-11-03T19:23:49Z
+  Generation:          1
+  Managed Fields:
+    API Version:  compliance.openshift.io/v1alpha1
+    Fields Type:  FieldsV1
+    fieldsV1:
+      f:status:
+        .:
+        f:applicationState:
+    Manager:      compliance-operator
+    Operation:    Update
+    Subresource:  status
+    Time:         2022-11-03T19:23:49Z
+    API Version:  compliance.openshift.io/v1alpha1
+    Fields Type:  FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .:
+          f:compliance.openshift.io/depends-on:
+        f:labels:
+          .:
+          f:compliance.openshift.io/has-unmet-dependencies:
+          f:compliance.openshift.io/scan-name:
+          f:compliance.openshift.io/suite:
+        f:ownerReferences:
+          .:
+          k:{"uid":"2309c739-28c1-4f78-937c-db824298de8c"}:
+      f:spec:
+        .:
+        f:apply:
+        f:current:
+          .:
+          f:object:
+            .:
+            f:apiVersion:
+            f:kind:
+            f:metadata:
+            f:spec:
+              .:
+              f:kubeletConfig:
+                .:
+                f:protectKernelDefaults:
+        f:outdated:
+        f:type:
+    Manager:    compliance-operator
+    Operation:  Update
+    Time:       2022-11-08T14:51:12Z
+  Owner References:
+    API Version:           compliance.openshift.io/v1alpha1
+    Block Owner Deletion:  true
+    Controller:            true
+    Kind:                  ComplianceCheckResult
+    Name:                  ocp4-high-node-master-kubelet-enable-protect-kernel-defaults
+    UID:                   2309c739-28c1-4f78-937c-db824298de8c
+  Resource Version:        623819
+  UID:                     4ae59518-d2fc-41e3-b11a-53f58055381c
+Spec:
+  Apply:  false
+  Current:
+    Object:
+      API Version:  machineconfiguration.openshift.io/v1
+      Kind:         KubeletConfig
+      Metadata:
+      Spec:
+        Kubelet Config:
+          Protect Kernel Defaults:  true
+  Outdated:
+  Type:  Configuration
+Status:
+  Application State:  NotApplied
+Events:               <none>
+```
+
+In this case, the remediation is to set 
+
+```
+  Current:
+    Object:
+      API Version:  machineconfiguration.openshift.io/v1
+      Kind:         KubeletConfig
+      Metadata:
+      Spec:
+        Kubelet Config:
+          Protect Kernel Defaults:  true
+```
+
+in another remediation for a CoreOS ignition config (truncated):
+
+```
+oc describe complianceremediation rhcos4-high-worker-sysctl-net-ipv4-conf-default-send-redirects
+
+<truncated>
+
+Spec:
+  Apply:  false
+  Current:
+    Object:
+      API Version:  machineconfiguration.openshift.io/v1
+      Kind:         MachineConfig
+      Spec:
+        Config:
+          Ignition:
+            Version:  3.1.0
+          Storage:
+            Files:
+              Contents:
+                Source:   data:,net.ipv4.conf.default.send_redirects%3D0%0A
+              Mode:       420
+              Overwrite:  true
+              Path:       /etc/sysctl.d/75-sysctl_net_ipv4_conf_default_send_redirects.conf
+  Outdated:
+  Type:  Configuration
+```
+
+In this case, you're creating file /etc/sysctl.d/75-sysctl_net_ipv4_conf_default_send_redirects.conf and setting the appropriate value.
+
+
 ### Optionally apply tailoring to check & remediation content
 
 ### Manually apply remediation
