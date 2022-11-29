@@ -15,6 +15,10 @@ Compliance Operator in Quay:
 https://quay.io/repository/compliance-operator/compliance-operator
 https://quay.io/repository/compliance-operator/compliance-operator?tab=tags
 
+Compliance Operator source and Documentation:
+https://github.com/ComplianceAsCode/compliance-operator
+https://github.com/ComplianceAsCode/compliance-operator/tree/master/doc
+
 Classifiction Banners:
 https://docs.openshift.com/container-platform/4.11/web_console/customizing-the-web-console.html#creating-custom-notification-banners_customizing-web-console
 
