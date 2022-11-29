@@ -18,6 +18,7 @@ https://quay.io/repository/compliance-operator/compliance-operator?tab=tags
 Classifiction Banners:
 https://docs.openshift.com/container-platform/4.11/web_console/customizing-the-web-console.html#creating-custom-notification-banners_customizing-web-console
 
+```
 Common Classification Colors:
   UNCLASSIFIED: 
     Foreground: "#ffffff"
@@ -28,4 +29,4 @@ Common Classification Colors:
   TS:
     Foreground: "#ffffff"
     Background: "#f0ad4e" 
-
+```
