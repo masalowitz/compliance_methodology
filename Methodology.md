@@ -329,6 +329,19 @@ In this case, you're creating file /etc/sysctl.d/75-sysctl_net_ipv4_conf_default
 
 ### Manually apply remediation
 
+When applying CoreOS remediations, either via openshift console or command line, pause machineconfig updates prior to applying the remediations. If you do not, after every sucessfull application of a CoreOS remediation, the machiencofnig will rebuild and the nodes will boot into it. 
+
+```
+oc patch mcp/{master|worker|other} --patch '{"spec":{"paused":true}}' --type=merge
+```
+
+
+
+
+```
+oc patch complianceremediations/{rule} --patch '{"spec":{"apply":true}}' --type=merge
+```
+
 ### Rescan environment to confirm sucessful remediation
 
 ### Lather, rinse, repeat until available remediations applied
