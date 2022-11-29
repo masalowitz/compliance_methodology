@@ -14,3 +14,18 @@ https://github.com/ComplianceAsCode/content
 Compliance Operator in Quay:
 https://quay.io/repository/compliance-operator/compliance-operator
 https://quay.io/repository/compliance-operator/compliance-operator?tab=tags
+
+Classifiction Banners:
+https://docs.openshift.com/container-platform/4.11/web_console/customizing-the-web-console.html#creating-custom-notification-banners_customizing-web-console
+
+Common Classification Colors:
+  UNCLASSIFIED: 
+    Foreground: "#ffffff"
+    Background: "#5cb85c"
+  SECRET:
+    Foreground: "#ffffff"
+    Background: "#d9534f"
+  TS:
+    Foreground: "#ffffff"
+    Background: "#f0ad4e" 
+
