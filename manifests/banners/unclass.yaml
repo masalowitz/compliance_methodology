@@ -1,0 +1,9 @@
+apiVersion: console.openshift.io/v1
+kind: ConsoleNotification
+metadata:
+  name: classbanner
+spec:
+  backgroundColor: '#5cb85c'
+  color: '#ffffff'
+  location: BannerTopBottom
+  text: UNCLASSIFIED
