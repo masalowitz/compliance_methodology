@@ -37,3 +37,6 @@ Please see the following topics and references for further information about the
     Foreground: "#ffffff"
     Background: "#f0ad4e" 
 ```
+## Notice and Consent Banners:
+Many thanks to @RyanMillerC for this great example! 
+- https://github.com/RyanMillerC/openshift-custom-gov-login
