@@ -409,9 +409,9 @@ As you can see above, it is a fairly trivial exercise to apply a significant num
 
 Compliance Operator also contain the capability to schedule persistent remediation runs on whatever schedule you like. When a variance is detected the operator will (re)apply the the correct remediaton and trigger an MCP update if applicable.
 
-There are some cons to using this method. First, you enable the content body itself to be the arbiter of compliance without applying administrative review. Second, should a check/remediation content mismatch arise, you could end up with weekly infrastructure restarts for no reason other than a typo.
+There are some cons to using this method. First, you enable the content body itself to be the arbiter of compliance without applying administrative review. Second, should a check/remediation content mismatch arise, you could end up with weekly (or daily...) infrastructure restarts for no reason other than a typo.
 
-Depending on your comfort level and enforcement requirements, manual apply for new remediation content and monitor daily may be your best approach. if policy or eceonmy of scale dictates full automation, determining an appropriate execution period AND ensuring that no subsequent scans show FAIL after remediation may be the most sound approach.
+Depending on your comfort level and enforcement requirements, manually applying new remediation content and monitoring daily may be your best approach. if policy or economy of scale dictates full automation, determining an appropriate execution period AND ensuring that no subsequent scans show FAIL after remediation may be the most sound approach.
 
 Should full automation be your choice, set the schedule in the ScanSetting for default-auto-apply, confirm the other details for you infrastucture, then create a ScanSettingBinding to activate it. I recommend scheduling it to run before daily scans kick off, but different environments have different requirements... schedule as appropriate for you environment, approved maintenance windows, etc. 
 
