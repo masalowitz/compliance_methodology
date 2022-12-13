@@ -343,13 +343,73 @@ oc patch complianceremediations/{rule} --patch '{"spec":{"apply":true}}' --type=
 ```
 
 ### Rescan environment to confirm sucessful remediation
+```
+ oc annotate compliancescans/{scan name} compliance.openshift.io/rescan=
+
+```
+
+### Reduce some typing:
+
+I like to cheat and make a quick and dirty shell scripts for regular actions:
+
+~/bin/rescan:
+```
+#!/bin/sh
+oc annotate compliancescans/$1 compliance.openshift.io/rescan=
+```
+
+~/bin/apply_stig:
+```
+#!/bin/sh
+oc patch complianceremediations/$1 --patch '{"spec":{"apply":true}}' --type=merge
+```
 
 ### Lather, rinse, repeat until available remediations applied
 
+Now that we have some easy commands to use, we can start batching compliance data together into as many groups as we would like to match our comfort level with the content...
+
+Lets start with a basic filter on the status of the rule... "FAIL" and the presence of an automated remediation "compliance.openshift.io/automated-remediation" then add a filter for the body of content we wish to address first (or don't, to do the whole shebang at once...) and filter for the rule name.
+
+```
+for rule in `oc get compliancecheckresults -l 'compliance.openshift.io/check-status=FAIL,compliance.openshift.io/automated-remediation,compliance.openshift.io/scan-name=ocp4-high-node-master' | awk '{print $1}'` ; do \
+  echo ${rule} ; \
+done
+```
+This will output a list of currently unremediated rules which contain automated remediation, filtered for OCP4 node rules:
+```
+ocp4-high-node-master-directory-access-var-log-kube-audit
+ocp4-high-node-master-directory-access-var-log-oauth-audit
+ocp4-high-node-master-directory-access-var-log-ocp-audit
+ocp4-high-node-master-kubelet-enable-protect-kernel-defaults
+ocp4-high-node-master-kubelet-enable-protect-kernel-sysctl
+```
+
+If that list were excessive, adding a grep to filter for directory as below:
+```
+for rule in `oc get compliancecheckresults -l 'compliance.openshift.io/check-status=FAIL,compliance.openshift.io/automated-remediation,compliance.openshift.io/scan-name=ocp4-high-node-master' | grep directory | awk '{print $1}'` ; \
+  do echo ${rule} ; \
+done
+
+ocp4-high-node-master-directory-access-var-log-kube-audit
+ocp4-high-node-master-directory-access-var-log-oauth-audit
+ocp4-high-node-master-directory-access-var-log-ocp-audit
+```
+Then once you're satisfied with the ruleset, swap your echo for your handy apply_stig (Be sure to pause MCP updates!!!):
+
+```
+for rule in `oc get compliancecheckresults -l 'compliance.openshift.io/check-status=FAIL,compliance.openshift.io/automated-remediation,compliance.openshift.io/scan-name=ocp4-high-node-master' | grep directory | awk '{print $1}'` ; \
+  do ~/bin/apply_stig ${rule} ; \
+done
+```
+
+Filtering the rules may not seem very necessary in the OCP4 high NIST controlset, but when you add CoreOS controls, the number of remediations (191 at the time of this post) is rather extensive...filtering by sysctl rules, kernel modules, or audit rules can limit the scope of change quite effectively.  
+
+Once your updates are applied, unpause your MCP updates and if reboots are necessary, the automation will schedule them. When the cluster updates are complete, trigger a rescan of your server and check the remediation status of the rules you applied. 
+
 ### Automating applying remediation - pros, cons, and recommendations
 
-### Manual Remeditions
 
+### Manual Remediations
 
 
 ## Next Steps: Using ACS to view and export compliance
