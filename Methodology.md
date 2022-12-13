@@ -191,13 +191,10 @@ ocp4-high-node-worker-kubelet-enable-protect-kernel-sysctl                      
 
 ### Review and confirm remediations
 
-So before we apply a remediationf or the firts tiem, we should have a look at what it is, what criteria it uses to determine compliance, and is the embedded remedaition something apprtopriate for our server? Let look at one...
-```
-oc describe complianceremediation ocp4-high-node-master-kubelet-enable-protect-kernel-defaults
-```
+So before we apply a remediation for the first time, we should have a look at what it is, what criteria it uses to determine compliance, and is the embedded remediation something appropriate for our server? Let's look at one...
 
 ```
-[msalowit@fedora compliance_operator]$ oc describe complianceremediation ocp4-high-node-master-kubelet-enable-protect-kernel-defaults
+[foo@bar]$ oc describe complianceremediation ocp4-high-node-master-kubelet-enable-protect-kernel-defaults
 Name:         ocp4-high-node-master-kubelet-enable-protect-kernel-defaults
 Namespace:    openshift-compliance
 Labels:       compliance.openshift.io/has-unmet-dependencies=
