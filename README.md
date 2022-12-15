@@ -112,7 +112,7 @@ settingsRef:
   name: default
   ```
 
-Creation of a ScanSettingBinding triggers an immediate scan of the system. Once created, there are two ways to trigger a scan/rescan of the system: change the cron entry or execute a [rescan](/Methodology.md#rescan-environment-to-confirm-sucessful-remediation)
+Creation of a ScanSettingBinding triggers an immediate scan of the system. Once created, there are two ways to trigger a scan/rescan of the system: change the cron entry or execute a [rescan](/README.md#rescan-environment-to-confirm-sucessful-remediation)
 
 ### Confirm Execution of scans
 
@@ -135,7 +135,7 @@ rhcos4-high-worker      DONE    NON-COMPLIANT
 
 Now is a really good time to address the timeless question: "What did it look like before?" 
 
-There are a couple of ways to extract compliance data, but ACS is by far the easiest. If you'd like a pre-remediation snapshot of your complaince state to keep the data for comparison, skip ahead to the ACS section [Using ACS to View and Export Compliance](/Methodology.md#next-steps-using-acs-to-view-and-export-compliance) and return when you have your CSV(s) safely tucked away.
+There are a couple of ways to extract compliance data, but ACS is by far the easiest. If you'd like a pre-remediation snapshot of your complaince state to keep the data for comparison, skip ahead to the ACS section [Using ACS to View and Export Compliance](/README.md#next-steps-using-acs-to-view-and-export-compliance) and return when you have your CSV(s) safely tucked away.
 
 ### Identify items which FAIL analysis
 
