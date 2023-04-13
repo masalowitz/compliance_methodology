@@ -343,13 +343,18 @@ When applying CoreOS remediations, either via openshift console or command line,
 oc patch mcp/{master|worker|other} --patch '{"spec":{"paused":true}}' --type=merge
 ```
 
-When you are done performing the remediations:
-
-#### Restart MCP updates
+#### Apply appproriate remediations
 
 ```
 oc patch complianceremediations/{rule} --patch '{"spec":{"apply":true}}' --type=merge
 ```
+
+#### Resume MCP Updates (and allow the cluster to reboot to apply them)
+
+```
+oc patch mcp/{master|worker|other} --patch '{"spec":{"paused":false}}' --type=merge
+```
+
 
 ### Rescan environment to confirm sucessful remediation
 ```
