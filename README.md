@@ -435,6 +435,99 @@ Should full automation be your choice, set the schedule in the ScanSetting for d
 
 ### Manual Remediations
 
+# Extracting Compliance Results
+
+## ARF (Asset Reporting Format) Results
+The scans provide two kinds of raw results: the full report in the ARF format
+and just the list of scan results in the XCCDF format. The ARF reports are,
+due to their large size, copied into persistent volumes:
+
+```
+$ oc get pv
+NAME                                       CAPACITY  CLAIM
+pvc-5d49c852-03a6-4bcd-838b-c7225307c4bb   1Gi       openshift-compliance/workers-scan
+pvc-ef68c834-bb6e-4644-926a-8b7a4a180999   1Gi       openshift-compliance/masters-scan
+$ oc get pvc
+NAME                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+ocp4-moderate            Bound    pvc-01b7bd30-0d19-4fbc-8989-bad61d9384d9   1Gi        RWO            gp2            37m
+rhcos4-with-usb-master   Bound    pvc-f3f35712-6c3f-42f0-a89a-af9e6f54a0d4   1Gi        RWO            gp2            37m
+rhcos4-with-usb-worker   Bound    pvc-7837e9ba-db13-40c4-8eee-a2d1beb0ada7   1Gi        RWO            gp2            37m
+```
+
+An example of extracting ARF results from a scan called `workers-scan` follows:
+
+Once the scan had finished, you'll note that there is a `PersistentVolumeClaim` named
+after the scan:
+
+```
+oc get pvc/workers-scan
+NAME            STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+workers-scan    Bound    pvc-01b7bd30-0d19-4fbc-8989-bad61d9384d9   1Gi        RWO            gp2            38m
+```
+
+You'll want to start a pod that mounts the PV, for example:
+
+```yaml
+apiVersion: "v1"
+kind: Pod
+metadata:
+  name: pv-extract
+spec:
+  containers:
+    - name: pv-extract-pod
+      image: registry.access.redhat.com/ubi8/ubi
+      command: ["sleep", "3000"]
+      volumeMounts:
+        - mountPath: "/workers-scan-results"
+          name: workers-scan-vol
+  volumes:
+    - name: workers-scan-vol
+      persistentVolumeClaim:
+        claimName: workers-scan
+```
+
+You can inspect the files by listing the `/workers-scan-results` directory and copy the
+files locally:
+
+```
+$ oc exec pods/pv-extract -- ls /workers-scan-results/0
+lost+found
+workers-scan-ip-10-0-129-252.ec2.internal-pod.xml.bzip2
+workers-scan-ip-10-0-149-70.ec2.internal-pod.xml.bzip2
+workers-scan-ip-10-0-172-30.ec2.internal-pod.xml.bzip2
+$ oc cp pv-extract:/workers-scan-results .
+```
+
+The files are bzipped. To get the raw ARF file:
+
+```
+$ bunzip2 -c workers-scan-ip-10-0-129-252.ec2.internal-pod.xml.bzip2 > workers-scan-ip-10-0-129-252.ec2.internal-pod.xml
+```
+
+## XCCDF results
+
+The XCCDF results are much smaller and can be stored in a configmap, from
+which you can extract the results. For easier filtering, the configmaps
+are labeled with the scan name:
+
+```
+$ oc get cm -l=compliance.openshift.io/scan-name=masters-scan
+NAME                                            DATA   AGE
+masters-scan-ip-10-0-129-248.ec2.internal-pod   1      25m
+masters-scan-ip-10-0-144-54.ec2.internal-pod    1      24m
+masters-scan-ip-10-0-174-253.ec2.internal-pod   1      25m
+```
+
+To extract the results, use:
+
+```
+$ oc extract cm/masters-scan-ip-10-0-174-253.ec2.internal-pod
+```
+
+Note that if the results are too big for the ConfigMap, they'll be bzipped and
+base64 encoded.
+
+
 
 ## Next Steps: Using ACS to view and export compliance
 
