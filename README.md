@@ -435,9 +435,9 @@ Should full automation be your choice, set the schedule in the ScanSetting for d
 
 ### Manual Remediations
 
-# Extracting Compliance Results
+## Extracting Compliance Results
 
-## ARF (Asset Reporting Format) Results
+### ARF (Asset Reporting Format) Results
 The scans provide two kinds of raw results: the full report in the ARF format
 and just the list of scan results in the XCCDF format. The ARF reports are,
 due to their large size, copied into persistent volumes:
@@ -504,7 +504,7 @@ The files are bzipped. To get the raw ARF file:
 $ bunzip2 -c workers-scan-ip-10-0-129-252.ec2.internal-pod.xml.bzip2 > workers-scan-ip-10-0-129-252.ec2.internal-pod.xml
 ```
 
-## XCCDF results
+### XCCDF results
 
 The XCCDF results are much smaller and can be stored in a configmap, from
 which you can extract the results. For easier filtering, the configmaps
